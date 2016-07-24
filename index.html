@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Developing Data Products</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Developing Data Products">
+  <meta name="author" content="Priscilla Ciaccio">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Developing Data Products</h1>
+    <h2>Weight Loss App</h2>
+    <p>Priscilla Ciaccio<br/></p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Developing Data Products Project</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>This is the final project for the Coursera Developing Data Products Course.</p>
+
+<p>The requirements for the project are to create and deploy a Shiny application, and prepare a presentation using Slidify or RStudio Presenter.</p>
+
+<p>The application that I developed is a weight loss application.  It can follow your progress from your starting weight to your goal weight. After you enter your starting weight and your final  goal, you can enter your weights as of different dates so that you can see your progress to your goal.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Weight Loss App</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The purpose of this app is to calculate and keep track of 
+your progress to your weight loss goal.</p>
+
+<p>This app:</p>
+
+<ul>
+<li>Calculates how much weight has been lost since the starting weight.</li>
+<li>Calculates the percent of body weight that has been lost</li>
+<li>Calculates how much more weight needs to be lost to obtain goal weight.</li>
+<li>Gives some encouragement to help progress towards the goal.</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>How to use the App</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>For this app, none of the variables get recorded until the &quot;Set&quot; Buttons are used.</p>
+
+<p>Steps to using the app:</p>
+
+<ul>
+<li>You need to enter your goal weight and then hit the &quot;Set Goal Weight&quot; Button.</li>
+<li>Enter the date you started your diet and what your starting weight was and hit the &quot;Set Starting Weight&quot; Button.</li>
+<li>Then you can update your weight and the days of the weight in and watch your progress to your goal weight. You must hit the &quot;Set Current Weight&quot; Button after each progression.</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>How to use the App (Continued)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>As you enter your information the main pannel will show the information you entered and all calculations toward your goal.</p>
+
+<pre><code class="r">goal&lt;-150
+weight1&lt;-200
+weight2&lt;-190
+</code></pre>
+
+<p>You have lost 10 lbs and have 40 lbs still left to lose to meet your goal.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <article data-timings="">
+    <p>&lt;!--html_preserve--&gt;<div class="container-fluid"></p>
+
+<div class="row">
+<div class="col-sm-12">
+<h1>Weight Loss Project</h1>
+</div>
+
+<p></div></p>
+
+<div class="row">
+<div class="col-sm-4">
+<form class="well">
+<div class="form-group shiny-input-container">
+<label for="goal">Your Goal Weight</label>
+<input id="goal" type="number" class="form-control" value="150" min="100" max="600" step="0.1"/>
+</div>
+
+<div class="form-group shiny-input-container">
+<label for="weight">Weight, in lbs</label>
+<input id="weight" type="number" class="form-control" value="200" min="100" max="600" step="0.1"/>
+</div>
+
+<div id="date" class="shiny-date-input form-group shiny-input-container">
+<label class="control-label" for="date">Date:</label>
+<input type="text" class="form-control datepicker" data-date-language="en" data-date-weekstart="0" data-date-format="yyyy-mm-dd" data-date-start-view="month"/>
+</div>
+
+<p><button id="goButton3" type="button" class="btn btn-default action-button">Set Goal Weight</button>
+<button id="goButton" type="button" class="btn btn-default action-button">Set Starting Weight</button>
+<button id="goButton2" type="button" class="btn btn-default action-button">Set Current Weight</button>
+</form>
+</div></p>
+
+<div class="col-sm-8">
+<h2>Results of weight loss</h2>
+<div id="text1" class="shiny-html-output"></div>
+<div id="text2" class="shiny-html-output"></div>
+<div id="text3" class="shiny-html-output"></div>
+<pre id="text4" class="shiny-text-output"></pre>
+</div>
+
+<p></div>
+</div>&lt;!--/html_preserve--&gt;</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Developing Data Products Project'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Weight Loss App'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='How to use the App'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='How to use the App (Continued)'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='NA'>
+         5
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
