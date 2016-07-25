@@ -1,0 +1,130 @@
+---
+title       : Developing Data Products
+subtitle    : Weight Loss App
+author      : Priscilla Ciaccio
+job         : 
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : []            # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+runtime     : shiny
+---
+
+## Developing Data Products Project
+
+This is the final project for the Coursera Developing Data Products Course.
+
+The requirements for the project are to create and deploy a Shiny application, and prepare a presentation using Slidify or RStudio Presenter.
+
+The application that I developed is a weight loss application.  It can follow your progress from your starting weight to your goal weight. After you enter your starting weight and your final  goal, you can enter your weights as of different dates so that you can see your progress to your goal.
+
+---
+
+## Weight Loss App
+
+The purpose of this app is to calculate and keep track of 
+your progress to your weight loss goal.
+
+This app:
+* Calculates how much weight has been lost since the starting weight.
+* Calculates the percent of body weight that has been lost
+* Calculates how much more weight needs to be lost to obtain goal weight.
+* Gives some encouragement to help progress towards the goal.
+
+--- 
+
+## How to use the App
+
+For this app, none of the variables get recorded until the "Set" Buttons are used.
+
+Steps to using the app:
+
+* You need to enter your goal weight and then hit the "Set Goal Weight" Button.
+* Enter the date you started your diet and what your starting weight was and hit the "Set Starting Weight" Button.
+* Then you can update your weight and the days of the weight in and watch your progress to your goal weight. You must hit the "Set Current Weight" Button after each progression.
+
+--- 
+
+## How to use the App (Continued)
+
+As you enter your information the main pannel will show the information you entered and all calculations toward your goal.
+
+```{r}
+goal<-150
+weight1<-200
+weight2<-190
+```
+
+You have lost `r weight1-weight2` lbs and have `r weight2-goal` lbs still left to lose to meet your goal.
+
+---
+
+```{r opts.label='shiny', echo=FALSE}
+library(shiny)
+
+shinyUI(pageWithSidebar(
+  headerPanel("Weight Loss Project"),
+  sidebarPanel(
+    numericInput('goal', 'Your Goal Weight',150,min=100,max=600,step=0.1),
+    numericInput('weight', 'Weight, in lbs',200,min=100,max=600,step=0.1),
+    dateInput("date","Date:"),
+    actionButton("goButton3", "Set Goal Weight"),
+    actionButton("goButton", "Set Starting Weight"),
+    actionButton("goButton2", "Set Current Weight")
+  ),
+  mainPanel(
+    h2('Results of weight loss'),
+    htmlOutput('text1'),
+    htmlOutput('text2'),
+    htmlOutput('text3'),
+    verbatimTextOutput('text4')
+    )
+))
+
+loss<-function(weight1,weight2) round(weight1-weight2,digits=1) 
+p<-function(weight1,weight2) round(((weight1-weight2)/weight1)*100,digits=2)
+d<-function(date1,date2) date2-date1
+g<-function(goal,weight2) round(weight2-goal,digits=1)
+
+shinyServer(
+  function(input, output, session) {
+    weight1<-eventReactive(    
+      input$goButton, {isolate(input$weight)})
+    weight2<-eventReactive(    
+      input$goButton2, {input$weight})
+    date1<-eventReactive(     
+      input$goButton, {isolate(input$date)})
+    date2<-eventReactive(     
+      input$goButton2, {input$date})
+    goal<-eventReactive(      
+      input$goButton3, {isolate(input$goal)})
+      
+    output$text1<-renderUI({
+      paste("Your goal weight is",goal(),"lbs")})
+    output$text2<-renderUI({
+      paste("You weighed",weight1(),"lbs on", date1())})
+    output$text3<-renderUI({
+      paste("You weighed", weight2(), "lbs on", date2())})
+    output$text4<-renderText({
+      if(loss(weight1(),weight2())>=0){
+        str1<-paste("In the last", d(date1(),date2()), "days you have lost", loss(weight1(),weight2()), "lbs and",p(weight1(),weight2()),"% of your body weight")
+        str2<-paste("Goog Job! Keep up the good work!")
+      }else{
+        str1<-paste("In the last", d(date1(),date2()), "days you have gained", -loss(weight1(),weight2()), "lbs.")
+        str2<-paste("Time to rethink your diet and exercise plan.")
+      }
+      if (g(goal(),weight2())>0){
+        str3<-paste("You need to lose", g(goal(),weight2()), "more pounds to meet your goal")
+      } else {
+        str3<-paste("CONGRATULATIONS!!! You have met your goal of", goal(), "lbs")
+      }
+      paste(str1, str2, str3, sep="\n")
+    })
+  }
+)
+
+```
+
+
